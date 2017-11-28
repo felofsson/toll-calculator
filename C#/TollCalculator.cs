@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TollFeeCalculator;
 
 public class TollCalculator
@@ -65,29 +66,22 @@ public class TollCalculator
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    public Boolean IsTollFreeDate(DateTime date)
     {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
+        // Always TollFree on Saturday, Sunday and in July
+        if (date.DayOfWeek == DayOfWeek.Saturday ||
+            date.DayOfWeek == DayOfWeek.Sunday ||
+            date.Month == 7 ||
+            IsRecurrentTollFreeDate(date) ||
+            getYearSpecificTollFreeDates().Contains(date))
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
+            return true;
         }
-        return false;
+        else{
+            return false;
+        }
+
     }
 
     private enum TollFreeVehicles
@@ -99,4 +93,45 @@ public class TollCalculator
         Foreign,
         Military
     }
+
+    public bool IsRecurrentTollFreeDate(DateTime myDate)
+    {
+
+        DateTime compareDate = new DateTime(2000, myDate.Month, myDate.Day);
+
+        List<DateTime> recurrentTollFreeDates = new List<DateTime>();
+
+        recurrentTollFreeDates.Add(new DateTime(2000, 1, 1));
+        recurrentTollFreeDates.Add(new DateTime(2000, 4, 30));
+        recurrentTollFreeDates.Add(new DateTime(2000, 5, 1));
+        recurrentTollFreeDates.Add(new DateTime(2000, 6, 6));
+        recurrentTollFreeDates.Add(new DateTime(2000, 12, 24));
+        recurrentTollFreeDates.Add(new DateTime(2000, 12, 25));
+        recurrentTollFreeDates.Add(new DateTime(2000, 12, 26));
+        recurrentTollFreeDates.Add(new DateTime(2000, 12, 31));
+
+        return recurrentTollFreeDates.Contains(compareDate);
+    }
+
+    private List<DateTime> getYearSpecificTollFreeDates()
+    {
+        List<DateTime> YearSpecificTollFreeDates = new List<DateTime>();
+
+        // 2013
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 3, 28));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 3, 29));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 5, 8));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 5, 9));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 6, 5));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 6, 21));
+        YearSpecificTollFreeDates.Add(new DateTime(2013, 11, 1));
+
+        // 2014
+        // 2015
+        // 2016
+        // 2017 to be added
+
+        return YearSpecificTollFreeDates;
+    }
+
 }
