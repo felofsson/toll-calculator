@@ -42,8 +42,6 @@ public class TollCalculator
 
     public bool IsTollFreeVehicle(Vehicle vehicle)
     {
-        if (vehicle == null) return false;
-
         return Enum.IsDefined(typeof(TollFreeVehicles), vehicle.GetVehicleType().ToString());
     }
 
