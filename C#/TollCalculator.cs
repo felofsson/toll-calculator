@@ -39,7 +39,7 @@ public class TollCalculator
         return totalFee;
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    public bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
 
