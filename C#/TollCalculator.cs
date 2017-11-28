@@ -14,6 +14,28 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
+
+    // Class variables
+    List<DateTime> recurrentTollFreeDates = new List<DateTime> 
+                               {new DateTime(2000, 1, 1),
+                                new DateTime(2000, 4, 30),
+                                new DateTime(2000, 5, 1),
+                                new DateTime(2000, 6, 6),
+                                new DateTime(2000, 12, 24),
+                                new DateTime(2000, 12, 25),
+                                new DateTime(2000, 12, 26),
+                                new DateTime(2000, 12, 31)}; 
+
+    // 2014, 2015, 2016, 2017 too be added to this list
+    List<DateTime> YearSpecificTollFreeDates = new List<DateTime>
+                               {new DateTime(2013, 3, 28),
+                                new DateTime(2013, 3, 29),
+                                new DateTime(2013, 5, 8),
+                                new DateTime(2013, 5, 9),
+                                new DateTime(2013, 6, 5),
+                                new DateTime(2013, 6, 21),
+                                new DateTime(2013, 11, 1)}; 
+
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
@@ -23,20 +45,21 @@ public class TollCalculator
         long lastPassage = intervalStart.Millisecond;
         totalFee += GetTollFee(intervalStart, vehicle); // Always count the first
 
-        double minutesElapsedSinceLastPassage;
+        double timeSinceLastPassage;
 
         foreach (DateTime date in dates)
         {
-            minutesElapsedSinceLastPassage = (date.Millisecond - lastPassage)/(60*1000);
+            timeSinceLastPassage = (date.Millisecond - lastPassage)/(60*1000);
 
-            if (minutesElapsedSinceLastPassage > 60) {
+            if (timeSinceLastPassage > 60) {
                 totalFee += GetTollFee(date, vehicle);
                 lastPassage = date.Millisecond;
             }
 
-            if (totalFee > 60) totalFee = 60;
-
         }
+
+        if (totalFee > 60) totalFee = 60;
+
         return totalFee;
 
     }
@@ -72,8 +95,8 @@ public class TollCalculator
         if (date.DayOfWeek == DayOfWeek.Saturday ||
             date.DayOfWeek == DayOfWeek.Sunday ||
             date.Month == 7 ||
-            IsRecurrentTollFreeDate(date) ||
-            IsYearSpecificTollFreeDates(date))
+            recurrentTollFreeDates.Contains(date) ||
+            YearSpecificTollFreeDates.Contains(date)
         {
             return true;
         }
@@ -91,46 +114,6 @@ public class TollCalculator
         Diplomat,
         Foreign,
         Military
-    }
-
-    private bool IsRecurrentTollFreeDate(DateTime myDate)
-    {
-
-        DateTime compareDate = new DateTime(2000, myDate.Month, myDate.Day);
-
-        List<DateTime> recurrentTollFreeDates = new List<DateTime>();
-
-        recurrentTollFreeDates.Add(new DateTime(2000, 1, 1));
-        recurrentTollFreeDates.Add(new DateTime(2000, 4, 30));
-        recurrentTollFreeDates.Add(new DateTime(2000, 5, 1));
-        recurrentTollFreeDates.Add(new DateTime(2000, 6, 6));
-        recurrentTollFreeDates.Add(new DateTime(2000, 12, 24));
-        recurrentTollFreeDates.Add(new DateTime(2000, 12, 25));
-        recurrentTollFreeDates.Add(new DateTime(2000, 12, 26));
-        recurrentTollFreeDates.Add(new DateTime(2000, 12, 31));
-
-        return recurrentTollFreeDates.Contains(compareDate);
-    }
-
-    private bool IsYearSpecificTollFreeDates(DateTime date)
-    {
-        List<DateTime> YearSpecificTollFreeDates = new List<DateTime>();
-
-        // 2013
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 3, 28));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 3, 29));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 5, 8));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 5, 9));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 6, 5));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 6, 21));
-        YearSpecificTollFreeDates.Add(new DateTime(2013, 11, 1));
-
-        // 2014
-        // 2015
-        // 2016
-        // 2017 to be added
-
-        return YearSpecificTollFreeDates.Contains(date);
     }
 
 }
