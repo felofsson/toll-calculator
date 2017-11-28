@@ -9,7 +9,8 @@ public class TollCalculator
      * Calculate the total toll fee for one day
      *
      * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
+     * @param dates   - date and time of all passes on one day. 
+     *      Assumes a sorted list of dates, earliest first
      * @return - the total toll fee for that day
      */
 
