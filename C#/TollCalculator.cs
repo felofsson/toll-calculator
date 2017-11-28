@@ -41,12 +41,12 @@ public class TollCalculator
 
     }
 
-    public bool IsTollFreeVehicle(Vehicle vehicle)
+    private bool IsTollFreeVehicle(Vehicle vehicle)
     {
         return Enum.IsDefined(typeof(TollFreeVehicles), vehicle.GetVehicleType().ToString());
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    private int GetTollFee(DateTime date, Vehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
@@ -65,7 +65,7 @@ public class TollCalculator
         else return 0;
     }
 
-    public Boolean IsTollFreeDate(DateTime date)
+    private Boolean IsTollFreeDate(DateTime date)
     {
 
         // Always TollFree on Saturday, Sunday and in July
@@ -93,7 +93,7 @@ public class TollCalculator
         Military
     }
 
-    public bool IsRecurrentTollFreeDate(DateTime myDate)
+    private bool IsRecurrentTollFreeDate(DateTime myDate)
     {
 
         DateTime compareDate = new DateTime(2000, myDate.Month, myDate.Day);
