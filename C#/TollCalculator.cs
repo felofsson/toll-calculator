@@ -72,7 +72,7 @@ public class TollCalculator
             date.DayOfWeek == DayOfWeek.Sunday ||
             date.Month == 7 ||
             IsRecurrentTollFreeDate(date) ||
-            getYearSpecificTollFreeDates().Contains(date))
+            IsYearSpecificTollFreeDates(date))
         {
             return true;
         }
@@ -111,7 +111,7 @@ public class TollCalculator
         return recurrentTollFreeDates.Contains(compareDate);
     }
 
-    private List<DateTime> getYearSpecificTollFreeDates()
+    private bool IsYearSpecificTollFreeDates(DateTime date)
     {
         List<DateTime> YearSpecificTollFreeDates = new List<DateTime>();
 
@@ -129,7 +129,7 @@ public class TollCalculator
         // 2016
         // 2017 to be added
 
-        return YearSpecificTollFreeDates;
+        return YearSpecificTollFreeDates.Contains(date);
     }
 
 }
